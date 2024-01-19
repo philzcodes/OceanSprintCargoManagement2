@@ -1,0 +1,962 @@
+/*******************************************************/
+/**************** DepartmentOfHealth&HumanServices JAVASCRIPT ****************/
+/****************  Created 01/24/2013 ******************/
+/*******************************************************/
+/********************Global Variables***********************************/
+	var dialogLeft;
+	var dialogTop;
+/**************** Global Search Widget ****************/
+/* Script to Redirect Page and Pass Keywords to Search Pages */
+	function search(weburl) {
+		var keywords = document.getElementById("keywords").value;
+		var searchType = document.getElementById("jumpMenu").value;
+		var url = "";
+		var DEFAULT_MSG = "Enter Keyword...";
+
+		if (searchType == "search-site") {
+            if( keywords != DEFAULT_MSG){
+  //              url = weburl + encodeURIComponent("web/grants/search-site.html#keywords=" + keywords);
+                // url-encode '#' to pass to server
+                url = weburl + "web/grants/search-site.html%23keywords=" + encodeURIComponent(keywords);
+            } else {
+            	url = weburl +  "web/grants/search-site.html";
+            }
+	    } else if (searchType == "search-grants") {
+	    	if( keywords != DEFAULT_MSG){
+  //              url = weburl + encodeURIComponent("web/grants/user/dashboard?keywords=" + keywords);
+                url = weburl + "web/grants/user/dashboard&keywords=" + encodeURIComponent(keywords);
+        	} else {
+	    		url = weburl + "web/grants/user/dashboard";
+	    	}
+        }
+		window.location.href = url;
+	}
+
+/* Script to Clear Search Box Default Text */
+	function log( msg ) {
+		//console.log( msg );
+	}// log
+	
+	function clickclear(thisfield, defaulttext) {
+		if (thisfield.value == defaulttext) {
+			thisfield.value = "";
+			}
+		}
+	function clickrecall(thisfield, defaulttext) {
+		if (thisfield.value == "") {
+			thisfield.value = defaulttext;
+			}
+		}
+
+	function activityNav(){
+		for ( i=0; i < activities.length; i++ ) {
+			alert("Activity:"+activities[i].activityID);
+		}
+	}
+
+
+	function createNav() {
+		initPage();
+		var divObj = document.getElementById( 'topnav' );
+		divObj.innerHTML = "";
+		try {
+		 	var displayStr = "<ul>";
+		    var i=0;
+		    var inApplicant=false;
+		    var connectSubscriptionLink = "";
+		    for ( i=0; i < navData.topNavItems.length; i++ ) {
+		      	var el=navData.topNavItems[i];
+				
+				if(el.navName=="Applicants" && (isApplicant || isWorkspacePartner) && !isConnect && !isGrantor && (activities.length > 0)){
+					var menuName = el.navName.replace(' ','');
+					displayStr +=' <li id="'+menuName+'-tab" class="selected">';
+					}
+				else if(el.navName=="Grantors" && isGrantor && !isConnect){
+					var menuName = el.navName.replace(' ','');
+					displayStr +=' <li id="'+menuName+'-tab" class="selected">';
+				}
+				else if(el.navName=="Connect" && isConnect){
+					var menuName = el.navName.replace(' ','');
+					displayStr +=' <li id="'+menuName+'-tab" class="selected">';
+				}
+				else{
+					var menuName = el.navName.replace(' ','');
+					displayStr +='<li id="'+menuName+'-tab" >';
+				}
+//				if ((isApplicantIndv||isApplicantOrg ||isEbiz )&& (el.pageURL=="web/grants/grants-applicants")){
+				if (((isApplicant || isWorkspacePartner) && !isGrantor && (activities.length > 0))&& (el.pageURL=="web/grants/grants-applicants")){
+		        	displayStr +='<a href="'+applyUrl+'landingPage.faces"';
+		        }
+		        else if (isGrantor && (el.pageURL=="web/grants/grantors.html")){
+		        	displayStr +='<a href="'+applyUrl+'landingPage.faces"';
+		        }
+		        else if (GGUSER && (!isEbiz || (activities.length == 0)) && (el.pageURL=="web/grants/connect")){
+		        	displayStr +='<a href="'+applyUrl+'landingPage.faces?activityID=Connect"';
+		        }				
+		        else{
+		      		displayStr +='<a href="'+exitUrl+el.pageURL+'"';
+		        }
+		      	if (el.childCount> 0) {
+		      		displayStr +='class="parent"';
+		      	}
+		      	
+		      	displayStr +='>'+el.navName+'</a>';
+		      	if (el.childCount> 0) {
+		      		menuItems[menuCount]=el.navName;
+	 				menuCount++;
+	 				var menuName = el.navName.replace(' ','');
+		      		displayStr +='<div id="'+menuName+'-menu" class="gg-megamenu">';
+		      		if (el.navName == "Applicants"){
+		      			// placeholder - will put applicant links after (using outerHTML) this element
+		      			displayStr +='<div id="applicantLinksDiv" class="column"></div>';
+		      			displayStr +='<div class="column">';
+		      			displayStr +='<h3>Applicant Resources</h3>';
+		      			displayStr +='<ul>';
+		      			var topNav = navData.navitemMap["Applicants"];
+		      			for (j=0;j<topNav.length;j++){
+		      				var item = topNav[j];
+		      				if (item.navName.indexOf("Registration")==-1){
+		      						displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		      				}
+		      				else{
+		      					if (!isUser)
+		      						displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		      				}
+		      			}
+		      			displayStr +='</ul></div>';
+		      		} else if (el.navName=="About") {
+		      			displayStr +='<div class="column">';
+		      			displayStr +='	<h3>About DOHHS.org</h3>';
+		      			displayStr +='	<ul>';
+		      			var topNav = navData.navitemMap["About"];
+		      			for (j=0;j<topNav.length;j++){
+		      				var item = topNav[j];
+		     			    displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		     			}
+		     			displayStr +='</ul></div>';
+		      		}else if (el.navName=="Learn Grants") {
+		      			displayStr +='<div class="column">';
+		      			displayStr +='	<h3>GRANTS LEARNING CENTER</h3>';
+		      			displayStr +='<style>.gig-nav li {float:left; width:45%; white-space:nowrap;}</style>';
+		      			displayStr +='	<ul class="gig-nav">';
+		      			var topNav = navData.navitemMap["Learn Grants"];
+		      			for (j=0;j<topNav.length;j++){
+		      				var item = topNav[j];
+		     			    displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		     			}
+		     			displayStr +='</ul></div>';
+		      		}else if (el.navName=="Grantors") {
+						if(isGrantor){
+		          			displayStr +='<div id="grantorLinksDiv" style="max-width:700px;min-height:100px;" ></div>';
+							
+						}else{	
+							displayStr +='<div class="column">';
+							displayStr +='<h3>Grantor Resources</h3>';
+							displayStr +='<ul>';
+							var topNav = navData.navitemMap["Grantors"];
+							for (j=0;j<topNav.length;j++){
+								var item = topNav[j];
+								if (item.navName.indexOf("Registration")==-1){
+		      						displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+								}
+								else{
+									if (!isUser)
+										displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+								}
+							}
+		      			displayStr +='</ul></div>';
+							
+		      			}
+		      			
+		      		} else if (el.navName=="Forms") {
+		      			var topNav = navData.navitemMap["Forms"];
+		      			displayStr +='<div class="column">';
+		 			 	for(j=0;j<topNav.length;j++) {
+		
+		  			 		displayStr +='<h3><a href="'+exitUrl+topNav[j].pageURL+'" title="Click for '+topNav[j].navName+'">'+topNav[j].navName+'</a></h3>';
+		  			 		displayStr +='<ul>';
+		  			 		var navName = topNav[j].navName;
+		  			 		var subNav = navData.navitemMap[navName];
+		  			 		for( k=0; k<subNav.length; k++ ) {
+		  			 			var item = subNav[k];
+		  			 	    	displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		  			 		}
+		  			 		displayStr +='</ul>';
+		  				}// for
+		 			 	displayStr += '</div>';
+		      			
+		      			
+		      		} else if (el.navName=="Outreach") {
+		      			displayStr +='<div class="column">';
+		      			displayStr +='<h3>Outreach Communications</h3>';
+		      			displayStr +='<ul>';
+		      			var topNav = navData.navitemMap["Outreach"];
+		      			for (j=0;j<topNav.length;j++){
+		       				var item = topNav[j];
+		       			    displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		       			}
+		      			displayStr +='</ul></div>';
+		      		}
+		      		else if (el.navName=="Connect") {
+		      		   	var topNav = navData.navitemMap["Connect"];
+		 			 	for (j=0; j<topNav.length; j++) {
+			      			displayStr +='<div class="column">';
+		  			 		displayStr +='<h3><a href="'+exitUrl+topNav[j].pageURL+'" title="Click for '+topNav[j].navName+'">'+topNav[j].navName+'</a></h3>';
+		  			 		displayStr +='<ul>';
+		  			 		
+		 			 		if (GGUSER && !isEbiz && topNav[j].navName.indexOf("Subscriptions") >= 0) {
+		 						for( k=0; k<connectActivities.length; k++ ){
+		 							  displayStr += '<li><a href='+applyUrl+connectActivities[k].landingURL+'?activityID='+connectActivities[k].activityID+'&amp;cleanSession=1 title="Click to '+connectActivities[k].label+'">'+connectActivities[k].label+'</a></li>';
+		 						} //	
+		 			 		}
+		 			 		
+		  			 		var navName = topNav[j].navName;
+		  			 		var subNav = navData.navitemMap[navName];
+		  			 		if (subNav){
+			  			 		for( k=0; k<subNav.length; k++ ) {
+			  			 			var item = subNav[k];
+			  			 			if (item.navName=="Discussion Forum") {
+			  			 				if (GGUSER && !isEbiz) {
+			  			 					if (isEmailDuplicate) {
+			  			 						displayStr +='<li><a href="'+applyUrl+'landingPage.faces?activityID=Connect&dest=forum" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+			  			 					} else {
+			  			 						displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>'; 
+			  			 					}
+			  			 				}			  			 				
+			  			 			} else {
+			  			 				displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+			  			 			}
+			  			 		}
+		  			 		}
+		  			 		displayStr +='</ul></div>';
+		  				}// for		      			
+		      		}
+		      		else if (el.navName=="System-to-System") {
+		      		   	var topNav = navData.navitemMap["System-to-System"];
+		 			 	for(j=0;j<topNav.length;j++) {
+			      			displayStr +='<div class="column">';
+		  			 		displayStr +='<h3><a href="'+exitUrl+topNav[j].pageURL+'" title="Click for '+topNav[j].navName+'">'+topNav[j].navName+'</a></h3>';
+		  			 		displayStr +='<ul>';
+		  			 		var navName = topNav[j].navName;
+		  			 		var subNav = navData.navitemMap[navName];
+		  			 		for( k=0; k<subNav.length; k++ ) {
+		  			 			var item = subNav[k];
+		  			 	    	displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		  			 		}
+		  			 		displayStr +='</ul></div>';
+		  				}// for
+
+		  			}else if (el.navName=="Support") {
+	 			 		displayStr +='<div class="column">';
+				 		displayStr +='<h3>SUPPORT RESOURCES</h3>';
+		  			 	displayStr +='<ul>';
+		  			 	var topNav = navData.navitemMap["Support"];
+		  			 	if (topNav != null){
+		  			 	    for( k=0; k<topNav.length; k++ ) {
+		  			 	    	var item = topNav[k];
+		  			 	        displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		  			 	 }
+
+		  			 	 displayStr +='</ul></div>';
+		  			 	}// for
+
+	 			 	}
+
+	     		}
+		      	displayStr +='</li>';
+		    }
+		    displayStr +='</ul>';
+	        divObj.innerHTML = displayStr;
+	        if(isGrantor){
+			    getLinks(document.getElementById("grantorLinksDiv"));
+			}
+	        
+			getApplicantActionLinks(document.getElementById("applicantLinksDiv"));
+			    
+			if (GGUSER && !isEbiz){
+				//getConnectActionLinks(document.getElementById("connectLinksDiv"), connectSubscriptionLink);
+			}
+			    
+			displayNav();
+			displayLinks();
+			getFooterLinks();
+			getFooterBrandLinks();
+		} catch ( e ) {
+			window.open(applyUrl+"GrantGovInternalError_500", "_self");
+//			alert( "error creating menu: " + e.message );
+		}// try-catch
+		
+	}// createNav
+
+	function getApplicantActionLinks(LinksDiv){
+		if (LinksDiv == null)
+			return;
+		
+		var displayStr = '';
+		var currentHeading='';
+		var displayApplicantHeading = true;
+		
+/*		if (!isUser) {			// not applicant and not grantor
+			displayStr+='<div class="column">';
+			displayStr+='<h3>Grant Applications</h3>';
+			displayStr+='<ul>';
+			displayStr+='<li><a href='+exitUrl+'applicants/apply-for-grants.html title="Click to Apply for Grants">Apply for Grants</a></li>';
+			displayStr+='<li><a href='+exitUrl+'applicants/track-my-application.html title="Click to Track My Application">Track My Application</a></li>';
+			displayStr+='</ul>';
+			displayStr+='</div>';
+		}*/
+
+		//if No Profile User
+//		if (isUser && !isGrantor && !isApplicant && !isWorkspacePartner) {		// No Profile User
+		if ((!isApplicant && !isWorkspacePartner) || isGrantor || activities.length == 0 ) {		// R16.1 not applicant
+			displayStr +='<div class="column">';
+			displayStr +='<h3>Grant Applications</h3>';
+			displayStr +='<ul>';
+			displayStr+='<li><a href='+exitUrl+'applicants/apply-for-grants.html title="Click to Apply for Grants">How to Apply for Grants</a></li>';
+			displayStr+='<li><a href='+exitUrl+'applicants/track-my-application.html title="Click to Track My Application">Track My Application</a></li>';
+			displayStr +='</ul>';
+			displayStr +='</div>';
+		}
+		
+		
+/*		//if Grantor
+		if (isGrantor) {		// grantor
+			displayStr +='<div class="column">';
+			displayStr +='<h3>Grant Applications</h3>';
+			displayStr +='<ul>';
+			displayStr+='<li><a href='+exitUrl+'applicants/apply-for-grants.html title="Click to Apply for Grants">Apply for Grants</a></li>';
+			displayStr+='<li><a href='+exitUrl+'applicants/track-my-application.html title="Click to Track My Application">Track My Application</a></li>';
+			displayStr +='</ul>';
+			displayStr +='</div>';
+		}*/
+		
+		// if applicant
+//		if ( !isGrantor ) { 	// applicant 			20170426wk - R16.0
+		else { // applicant  --R16.1
+			var firstEntry=true;
+			
+			for( i=0; i<activities.length; i++ ){
+
+				  if (currentHeading!=activities[i].categoryID){
+					  displayHeading=true;
+					  currentHeading=activities[i].categoryID;
+				  }
+				  if (displayHeading){
+					  displayHeading = false;
+					  displayStr +='</ul>';
+					  displayStr +='</div>';
+					  displayStr +='<div class="column">';
+					  displayStr +='<h3>'+activities[i].categoryID+'</h3>';
+					  displayStr +='<ul>';
+					  //if ( firstEntry==true ) {
+					  if ( !isEbiz && firstEntry==true ) { // 20170426wk - R16.0
+						  if ( !isAuthorized ) {
+							displayStr+='<li><a href='+exitUrl+'applicants/apply-for-grants.html title="Click to Apply for Grants">How to Apply for Grants</a></li>';
+							displayStr+='<li><a href='+exitUrl+'applicants/track-my-application.html title="Click to Track My Application">Track My Application</a></li>';
+						  } else {
+							displayStr +='<li><a href='+exitUrl+'applicants/apply-for-grants.html title="Click to Apply for Grants">How to Apply for Grants</a></li>';
+						  }
+						  firstEntry=false;
+					  }
+					  if (isEbiz) {
+						  displayStr += '<li><a href='+applyUrl+'jsf/validateEBiz.faces?activityID='+activities[i].activityID+'&amp;cleanSession=1 title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+					  } else {
+						  displayStr += '<li><a href='+applyUrl+activities[i].landingURL+'?activityID='+activities[i].activityID+'&amp;cleanSession=1 title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+					  }
+				  } else {
+					  if (isEbiz){ 
+						  displayStr +='<li><a href='+applyUrl+'jsf/validateEBiz.faces?activityID='+activities[i].activityID+'&amp;cleanSession=1 title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+					  } else {
+						  displayStr +='<li><a href='+applyUrl+activities[i].landingURL+'?activityID='+activities[i].activityID+'&amp;cleanSession=1 title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+					  }
+				  }
+			}
+
+			displayHeading = true;
+			displayStr +='</ul>';
+			displayStr +='</div>';
+		}
+		
+		LinksDiv.outerHTML = displayStr;// outerHTML - put after element
+	}
+
+	function getLinks(LinksDiv) {
+		if (LinksDiv == null)
+			return;
+		
+		var displayStr = '';
+		var subheading='';
+		var addDiv=false;
+		var isClosingCalendar=false;
+		if (isGrantor){
+		for( i=0; i<activities.length; i++ ){
+			if (activities[i].landingURL!="") {
+				var isClosingCalendar=false;
+				if (activities[i].activityID=="CloseDateCalendarView"){
+					isClosingCalendar=true;
+				}else{
+					isClosingCalendar=false;
+				}
+				landingUrl = activities[i].landingURL;
+				if (isClosingCalendar==true){
+					landingUrl +='&amp;activityID='+activities[i].activityID+'&amp;cleanSession=1';
+				}
+				if (subheading==""){
+					    //displayStr+='<div class="column" style="height:120px;">';
+						subheading = activities[i].categoryID;
+		displayStr+='<div class="column">';
+		displayStr+='<h3>'+subheading+'</h3>';
+		displayStr+='<ul>';
+		displayStr+='<li><a href='+applyUrl+landingUrl;
+	
+		if (!isClosingCalendar) {
+			displayStr+='?activityID='+activities[i].activityID+'&amp;cleanSession=1';
+			
+		}
+			displayStr+=' title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+		} else if (activities[i].categoryID!=(subheading)){
+			subheading = activities[i].categoryID;
+
+			displayStr+='</ul>';
+			displayStr+='</div>';
+			displayStr+='<div class="column">';
+			displayStr+='<h3>'+subheading+'</h3>';
+			displayStr+='<ul>';
+			
+			displayStr+='<li><a href='+applyUrl+landingUrl;
+			if (!isClosingCalendar) {
+				displayStr+='?activityID='+activities[i].activityID+'&amp;cleanSession=1';
+				
+			}
+				displayStr+=' title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+		  } else {
+		      	displayStr+='<li><a href='+applyUrl+landingUrl;
+		      	if (!isClosingCalendar) {
+		      		displayStr+='?activityID='+activities[i].activityID+'&amp;cleanSession=1';
+		      	}
+		      	displayStr+=' title="Click to '+activities[i].label+'">'+activities[i].label+'</a></li>';
+			}
+		  }
+	    }
+	    displayStr+='</ul></div>';
+		displayStr +='<div class="column">';
+		      			displayStr +='<h3>Grantor Resources</h3>';
+		      			displayStr +='<ul>';
+		      			var topNav = navData.navitemMap["Grantors"];
+		      			for (j=0;j<topNav.length;j++){
+		        			 var item = topNav[j];
+		        			 if (item.navName.indexOf("Registration")== -1){
+		        				 displayStr +='<li><a href="'+exitUrl+item.pageURL+'" title="Click for '+item.navName+'">'+item.navName+'</a></li>';
+		        			 }
+		        		}
+		      			displayStr +='</ul></div>';
+		}
+		LinksDiv.innerHTML = displayStr;
+	}// getApplicantsLinks
+
+	
+	// for Connect Center links
+	function getConnectActionLinks(LinksDiv, connectSubscriptionLink){
+		if (LinksDiv){
+			var displayStr = '';
+			var currentHeading='';
+			var displayApplicantHeading = true;
+			if (GGUSER && !isEbiz) {
+				displayStr+='<div class="column">';
+				if (connectSubscriptionLink.length > 0) {
+					displayStr+='<h3><a href="'+connectSubscriptionLink+'" title="Click for Manage Subscriptions">Manage Subscriptions</a></h3>';
+					console.info(connectSubscriptionLink);
+				}
+				else {
+					displayStr+='<h3>Manage Subscriptions</h3>';
+					console.info("Can not find link for subscription landing page")
+				}
+				displayStr+='<ul>';
+				
+				for( i=0; i<connectActivities.length; i++ ){
+					  displayStr += '<li><a href='+applyUrl+connectActivities[i].landingURL+'?activityID='+connectActivities[i].activityID+'&amp;cleanSession=1 title="Click to '+connectActivities[i].label+'">'+connectActivities[i].label+'</a></li>';
+				} //			
+				
+				displayStr+='</ul>';
+				displayStr+='</div>';
+			}
+			LinksDiv.outerHTML = displayStr;// outerHTML - put after element
+		}
+	}	
+	
+	function displayNav() {
+		try {
+		var index=0;
+		   var tab;
+		   var menu;
+		for (i=0;i<menuItems.length;i++){
+		      tab=menuItems[i].replace(' ','')+'-tab';
+		      menu=menuItems[i].replace(' ','')+'-menu'
+		      jkmegamenu.definemenu(tab,menu,"mouseover");
+		}// for
+		jkmegamenu.render(jQuery);
+		} catch ( e ) {
+			alert( "error displaying nav: " + e.message );
+		}// try-catch
+	}// displayNav
+
+	function getWebURL(url,elementId){
+	document.getElementById(elementId).setAttribute("href",webUrl+url);
+	}//getWebURL
+	function getExitURL(url,elementId){
+	document.getElementById(elementId).setAttribute("href",exitUrl+url);
+	}//getExitURL
+	function getAppURL(url,elementId){
+	document.getElementById(elementId).setAttribute("href",applyUrl+url);
+	}//getAppURL
+
+	function displayHelp() {
+		window.open( '/apply/spoExit.jsp?p=/help/html/help/index.htm','_blank','dependent=yes, scrollbars=yes, menubar=yes, resizable=yes, location=no, titlebar=yes, status=yes, height=528px, width=1298px');
+	}// displayHelp
+
+	var spoExitUrlPrefix = '/apply/spoExit.jsp?';
+	
+    function initSwitchProfileMenu() {
+        var fn = "initSwitchProfileMenu() ";
+        log( fn );
+        
+        var switchProfileMenuLinkObj = $( "#switchProfileMenuLink" );
+        
+        if ( !displaySwitchProfileMenu() ) {
+            log( fn + "hide switch profile menu link" );
+            switchProfileMenuLinkObj.hide();
+            return;
+        }
+
+        log( fn + "show switch profile menu link" );
+        switchProfileMenuLinkObj.show();
+        
+        var switchProfileMenuObj = $( "#switchProfilePanel" );
+        var menuStr = '';
+
+        log( fn + "switch profile menu: " + JSON.stringify( switchProfileMenu ) );
+        log( fn + "has current profile: " + switchProfileMenu.hasOwnProperty( "currentProfile" ) );
+        if ( switchProfileMenu.hasOwnProperty( "currentProfile" ) ) {
+            var currentProfile = switchProfileMenu.currentProfile;
+            menuStr += '<span onclick="toggleSwitchProfileMenu();" class="switchProfileMenuCurrent">';
+            menuStr += '<strong>';
+            menuStr += currentProfile.name;
+
+            if ( currentProfile.hasOwnProperty( "duns" ) ) {
+                menuStr += ' (' + currentProfile.duns + ')';
+            } else if ( currentProfile.hasOwnProperty( "agencyCode" ) ) {
+                menuStr += ' (' + currentProfile.agencyCode + ')';
+            }
+
+            menuStr += ' - Current';
+            menuStr += '</strong>';
+            menuStr += '</span>';
+        }
+        
+        if ( switchProfileMenu.hasOwnProperty( "otherProfiles" ) ) {
+            var otherProfiles = switchProfileMenu.otherProfiles;
+            var otherProfile = {};
+            for ( var i = 0; i < otherProfiles.length; i++ ) {
+                otherProfile = otherProfiles[i];
+                menuStr += '<br />';
+                menuStr += '<a href="javascript:switchGGProfile(';
+                menuStr += otherProfile.id;
+                menuStr += ');"';
+                menuStr += '>';
+                menuStr += otherProfile.name;
+
+                if ( otherProfile.hasOwnProperty( "duns" ) ) {
+                    menuStr += ' (' + otherProfile.duns + ')';
+                } else if ( otherProfile.hasOwnProperty( "agencyCode" ) ) {
+                    menuStr += ' (' + otherProfile.agencyCode + ')';
+                }
+                
+                menuStr += '</a>';
+            }
+        }
+
+        if ( menuStr.length > 0 ) {
+            switchProfileMenuObj.html( menuStr );
+        }
+        
+        switchProfileMenuObj.dialog({
+            autoOpen: false,
+            position: { my: "right top", at: "right bottom+10", of: switchProfileMenuLink },
+            title: "Visible Profiles",
+            maxHeight: 225,
+            minHeight: "auto",
+            minWidth: "auto",
+            resizable: false,
+            draggable: false,
+            modal: true,
+            open: function(){
+                $('.ui-widget-overlay').bind('click',function(){
+                    switchProfileMenuObj.dialog('close');
+                })
+            },
+        });
+        
+        switchProfileMenuObj.siblings('.ui-dialog-titlebar').remove();// remove title bar
+        
+    }/* initSwitchProfileMenu */
+
+    function displaySwitchProfileMenu() {
+        var fn = "displaySwitchProfileMenu() ";
+        log( fn );
+        var hasMenu = switchProfileMenu.hasOwnProperty( "otherProfiles" ) ? true : false;
+        log( fn + "display switch profile menu: " + hasMenu );
+        return hasMenu;
+    }/* displaySwitchProfileMenu */
+
+    function updateSwitchProfileMenu( menuJson ) {
+        var fn = "updateSwitchProfileMenu() ";
+        log( fn + "menu json: " + menuJson );
+        
+        if ( typeof menuJson == "object" ) {
+            log( fn + "menu json is object" );
+            switchProfileMenu = menuJson;
+        } else {
+            log( fn + "menu json is string" );
+            switchProfileMenu = JSON.parse( menuJson );
+        }// if-else
+        
+        log( fn + "menu: " + JSON.stringify( switchProfileMenu ) );
+        initSwitchProfileMenu();
+    }/* updateSwitchProfileMenu */
+    
+
+	function switchGGProfile( profileId ) {
+		var fn = "switchGGProfile() ";
+        log( fn + "switch to profile id: " + profileId );
+        toggleSwitchProfileMenu();
+        var url = spoExitUrlPrefix + 'profileId=' + profileId + '&p=/apply/landingPage.faces';
+        log( fn + "forward url: " + url );
+        window.location = url;
+	}/* switchGGProfile */
+
+    function toggleSwitchProfileMenu() {
+        var switchProfileMenuObj = $( "#switchProfilePanel" );
+        if ( switchProfileMenuObj.dialog( "isOpen" ) ) {
+            switchProfileMenuObj.dialog( "close" );
+        } else {
+            switchProfileMenuObj.dialog( "open" );
+        }
+    }/* toggleSwitchProfileMenu */
+ 
+    $(window).resize(function() {
+        var switchProfileMenuObj = $( "#switchProfilePanel" );
+        if( switchProfileMenuObj.dialog( "isOpen" ) ) {
+            switchProfileMenuObj.dialog( "close" );
+            switchProfileMenuObj.dialog( "open" );
+        }
+    });
+    
+    // test
+//    function changeMenu() {
+//        var menuJson = '{"currentProfile":{"id":11111,"name":"active profile","duns":"0000000000000","isHidden":false,"isDeleted":false,"type":"APPLICANT_ORG"},"otherProfiles":[{"id":22222,"name":"other-profile-01","duns":"1111111111111","isHidden":false,"isDeleted":false,"type":"APPLICANT_ORG"}, {"id":33333,"name":"other-profile-02","duns":"2222222222222","isHidden":false,"isDeleted":false,"type":"APPLICANT_ORG"}]}';
+//        updateSwitchProfileMenu( menuJson );
+//    }
+
+
+	function displayLinks(){
+		var fn = "displayLinks() ";
+		var displayStr = '';
+		var logoStr='';
+        
+		displayStr="<ul>";
+		//displayStr+='<li><a href="spoExit.jsp?p=/search/email.do'+'">Test Search</a> | </li>';
+		displayStr+="<li><a href=\"javascript:displayHelp();\" title=\"Click for Help\">Help</a> | </li>";
+		// 20170717wk - R16.1
+		//displayStr+='<li><a href="'+exitUrl+'web/grants/manage-subscriptions.html'+'" title="Click to Manage Subsriptions">Manage Subscriptions</a> | </li>';
+        
+		if( !GGUSER ) {
+			displayStr+='<li><a href="'+webUrl+'web/grants/register'+'" title="Click to Register">Register</a> | </li>';
+			displayStr+='<li class="last"><a href="'+applyUrl+'login.faces?userType=applicant&amp;cleanSession=1" title="Click to Login">Login</a></li>';
+		} else {
+			//displayStr+='<li><a href="'+applyUrl+'changePwdInternal.faces?activityID=PasswordUpdate&amp;cleanSession=1" title="Click to Change Password">Change Password</a> | </li>';
+			displayStr+='<li><a href="'+applyUrl+'jsf/account/manageAccount.faces" title="Click to My Account">My Account</a> | </li>';
+			//if(userType==applicantIndvUserType || userType==applicantOrgType){
+			//	displayStr+='<li><a href="'+applyUrl+'jsf/applicantManageProfile.faces?activityID=ManageApplicantProfile&amp;cleanSession=1" title="Click to Manage Profile">Manage Profile</a> | </li>';
+			//}
+			//if(userType==agencyType){
+			//	displayStr+='<li><a href="'+applyUrl+'jsf/agencyManageProfile.faces?activityID=ManageAgencyUserProfile&amp;cleanSession=1" title="Click to Manage Profile">Manage Profile</a> | </li>';
+			//}
+			//if(userType==ebizType){
+			//	displayStr+='<li><a href="'+applyUrl+'validateMPIN?activityID=ViewE-BizProfile&amp;cleanSession=1" title="Click to View Profile">View Profile</a> | </li>';
+			//}
+			
+            //if ( displaySwitchProfileMenu() ) {
+                displayStr += '<span id="switchProfileMenuLink">';
+                displayStr += '<li class="last"><a href="javascript:toggleSwitchProfileMenu();" title="Click to Switch Profile" class="globnavlink" id="switchProfile">Switch Profile <i class="fa fa-caret-down fa-lg"></i></a> | </li>';
+                displayStr += '</span>';
+            //}// if
+            
+            // test link
+//            displayStr += '<li><a href="javascript:changeMenu()" title="Click to Manage Profile">Change Menu</a> | </li>';
+            
+			displayStr+='<li class="last"><a href="'+applyUrl+logoutURL+'" title="Click to Logout">Logout</a></li>';
+		}// if-else
+        
+        displayStr+="</ul>";
+
+        document.getElementById('globalnav').innerHTML = displayStr;
+            
+        initSwitchProfileMenu();
+
+        //for logo
+
+		if(!GGUSER){
+			logoStr='<a href="'+webUrl+'web/grants/home"><img src="/apply/images/grants/grants-gov-logo.png" width="245" height="78" border="0" alt="Click for Home" /></a>';
+		}
+		else
+		logoStr='<a href="'+exitUrl+'web/grants/home"><img src="/apply/images/grants/grants-gov-logo.png" width="245" height="78" border="0" alt="Click for Home" /></a>';
+	document.getElementById('logo').innerHTML = logoStr;
+
+	}//displayLinks
+	function setPaginationImgWidth( offSetElement,tableOffset){
+			paginationWidth=0;
+			var spans = document.getElementById(offSetElement).getElementsByClassName('ui-paginator-current');
+			
+			paginationWidth+=spans[0].offsetWidth;
+			spans=document.getElementById(offSetElement).getElementsByClassName('ui-paginator-first');
+			paginationWidth+=spans[0].offsetWidth;
+			spans=document.getElementById(offSetElement).getElementsByClassName('ui-paginator-prev');
+			paginationWidth+=spans[0].offsetWidth;
+			spans=document.getElementById(offSetElement).getElementsByClassName('ui-paginator-pages');
+			paginationWidth+=(spans[0].offsetWidth);
+			spans=document.getElementById(offSetElement).getElementsByClassName('ui-paginator-next');
+			paginationWidth+=spans[0].offsetWidth;
+			spans=document.getElementById(offSetElement).getElementsByClassName('ui-paginator-last');
+			paginationWidth+=spans[0].offsetWidth;
+			var width=tableOffset-(paginationWidth+50);
+			return width;
+			
+		}//setPaginationImgWidth
+	
+	function setImgWidth(elementName,imgWidth){
+	var x=document.getElementsByName(elementName);
+			for(var i=0;i<x.length;i++){
+				x[i].width=imgWidth;
+			}
+	}//setImgWidth
+
+	
+	function resetScrollbar(table){
+	
+			var elements = document.getElementsByClassName('ui-scrollpanel-container');
+			for(var i = 0, length = elements.length; i < length; i++) {
+			elements[i].style.height=document.getElementById(table).offsetHeight+16+"px";
+		}
+			
+	}//setPaginationWidth
+	function setPaginationWidth(offSetElement,imgName){
+			var tableOffset=document.getElementById(offSetElement).offsetWidth;
+			//alert(tableOffset);
+			var imgWidth=setPaginationImgWidth(offSetElement,tableOffset);
+			setImgWidth(imgName,imgWidth);
+			
+			
+	}//setPaginationWidth
+	function setPaginationWidthAndScrollBar(offSetElement,imgName,table){
+			setPaginationWidth(offSetElement,imgName);
+			resetScrollbar(table);
+	}//setPaginationWidthAndScrollBar
+	
+	function getFooterBrandLinks(){
+		var divObj = document.getElementById( 'footbrand' );
+		divObj.innerHTML = "";
+		var displayStr = '';
+		
+		displayStr+='<br/>';
+  		
+		displayStr+='<a href="https://grants-portal.psc.gov/"  target="_blank" class="footnavlink" title="Click for Frequently Asked Questions" style="font-size:12px">Frequently Asked Questions </a>';
+		displayStr+='<a href="'+exitUrl+'/web/grants/exit-disclaimer.html">';
+		displayStr+='<img src="/apply/images/grants/icon-footer-exit.png" alt="Click to View Exit Disclaimer" /></a>';
+		divObj.innerHTML = displayStr;
+		
+	}
+	
+	
+	function getFooterLinks(){
+		var divObj = document.getElementById( 'footnav' );
+		divObj.innerHTML = "";
+		var displayStr = '';
+		displayStr+='<ul>';
+		displayStr+='<li class="first">CONNECT WITH US: </li>';
+		displayStr+='<li><a href="http://blog.grants.gov" target="_blank" class="newbloglink" title="Click for DOHHS.org Community Blog">Blog</a></li>';
+		displayStr+='<li><a href="https://twitter.com/grantsdotgov" target="_blank" class="twitterlink" title="Click for DOHHS.org Twitter Page.">Twitter</a></li>';
+		displayStr+='<li><a href="https://www.youtube.com/user/GrantsGovUS" target="_blank" class="youtubelink" title="Click for DOHHS.org YouTube Page.">YouTube</a></li>';
+		displayStr+='<li><a href="http://grants-gov.blogspot.com" target="_blank" class="bloglink" title="Click for DOHHS.org Alerts">Alerts</a></li>';
+		displayStr+='<li><a href="'+exitUrl+'web/grants/rss.html" class="rsslink" title="Click for DOHHS.org RSS Feeds Page">RSS</a>| </li>';
+		displayStr+='<li><a href="'+exitUrl+'web/grants/xml-extract.html" class="xmllink" title="Click for DOHHS.org XML Extract">XML Extract</a></li>';
+		displayStr+='<li class="last"><a href="http://get.adobe.com/reader/otherversions/" target="_blank" class="pdflink" title="Click to Get Adobe Reader. NOTE: Please see Exit Disclaimer." style="padding-right:4px !important;">Get Adobe Reader</a><a href="'+exitUrl+'web/grants/exit-disclaimer.html"><img src="/apply/images/grants/icon-footer-exit.png" alt="Click to View Exit Disclaimer" /></a></li>';
+		displayStr+='</ul>';
+		displayStr+='<ul>';
+		displayStr+='<li class="first">HEALTH &amp; HUMAN SERVICES: </li>';
+		displayStr+='<li><a href="http://www.hhs.gov" title="Click for U.S. Department of Health &amp; Human Services" target="_blank">HHS.gov</a> | </li>';
+		displayStr+='<li><a href="https://www.eeoc.gov/" title="Click for EEOC / No Fear Act" target="_blank">EEOC / No Fear Act</a> | </li>';
+		displayStr+='<li><a href="'+exitUrl+'web/grants/accessibility-compliance.html" title="Click for Accessibility Compliance">Accessibility</a> | </li>';
+		displayStr+='<li><a href="'+exitUrl+'web/grants/privacy.html" title="Click for Privacy Policy">Privacy</a> | </li>';
+		displayStr+='<li><a href="'+exitUrl+'web/grants/exit-disclaimer.html" title="Click for DOHHS.org Disclaimers">Disclaimers</a> | </li>';
+		displayStr+='<li class="last"><a href="'+exitUrl+'web/grants/site-map.html" title="Click for DepartmentOfHealth&HumanServices Site Map">Site Map</a></li>';
+		displayStr+='</ul>';
+		displayStr+='<ul>';
+		displayStr+='<li class="first">COMMUNITY: </li>';
+		displayStr+='<li><a href="http://www.usa.gov" target="_blank" title="Click for USA.gov">USA.gov</a> | </li>';
+		displayStr+='<li><a href="http://www.whitehouse.gov" target="_blank" title="Click for WhiteHouse.gov">WhiteHouse.gov</a> | </li>';
+		displayStr+='<li><a href="http://www.usaspending.gov" target="_blank" title="Click for USAspending.gov">USAspending.gov</a> | </li>';
+		displayStr+='<li><a href="http://www.sba.gov" target="_blank" title="Click for U.S. Small Business Administration">SBA.gov</a> | </li>';
+		displayStr+='<li><a href="https://www.sam.gov" target="_blank" title="Click for System for Award Management">SAM.gov</a> | </li>';
+        displayStr+='<li><a href="http://www.ignet.gov/node/207" target="_blank" title="Click for Report Fraud">Report Fraud</a></li>';
+		displayStr+='</ul>';
+		divObj.innerHTML = displayStr;
+		
+	}//getFooterLinks
+	
+	function setPosition(dialog){
+		document.getElementById(dialog).style.left=dialogLeft;
+		document.getElementById(dialog).style.top=dialogTop;
+	}//setPosition
+	
+	function saveDialogBoxPosition(dialog){
+		dialogLeft=document.getElementById(dialog).style.left;
+		dialogTop=document.getElementById(dialog).style.top;
+	}//saveDialogBoxPosition
+	
+	function setTableWidth(table,imgName,isYScrollBar){
+		//var elements = document.getElementsByClassName('ui-datatable-header');
+		if(document.getElementById(table)!=null){
+			var elements = document.getElementById(table).getElementsByClassName('ui-datatable-header');
+			for(var i = 0, length = elements.length; i < length; i++) {
+				elements[i].style.width=document.getElementById(table+"_head").offsetWidth+"px";
+			}
+			document.getElementById(table+"_paginator_top").style.width=document.getElementById(table+"_head").offsetWidth+"px";
+			document.getElementById(table+"_paginator_bottom").style.width=document.getElementById(table+"_head").offsetWidth+"px";
+		
+			setPaginationWidth(table+"_paginator_top",imgName);
+		}
+}
+
+	function disableParentScroll(){
+		var page = document.getElementsByTagName('html')[0];
+		page.classList.add('noscroll');
+	}//disableParentScroll
+	
+	function enableParentScroll(){
+		var page = document.getElementsByTagName('html')[0];
+		page.classList.remove('noscroll');
+	}//enableParentScroll
+	
+	function initPage()
+	{
+	 
+	      if( window.addEventListener )
+	      {
+	            window.addEventListener('click', onPageClick, false);
+	      }
+	      else if( window.attachEvent )
+	      {
+	            window.attachEvent('onclick', onPageClick, false);
+	      }
+	 
+	      if( window.addEventListener )
+	      {
+	            window.addEventListener('focus', onFocus, false);
+	      }
+	      else if( window.attachEvent )
+	      {
+	            window.attachEvent('onfocus', onFocus, false);
+	      }
+	}
+	 
+	function onPageClick()
+	{
+	      updateSessionTimeout(false);
+	}
+	 
+	function onFocus()
+	{
+	      updateSessionTimeout(true);
+	}
+
+	function limitTextArea(element, limit) { 
+		var length = element.value.replace(/\n/g, "\r\n").length;
+		var actualLength = element.value.length;
+		if (length > limit) { 
+			element.value = element.value.substring(0, limit - (length-actualLength)); 
+		}
+	}
+	
+	function setToolTip(id, toolTip) {
+		var element = document.getElementById(id);
+		
+		if (element == null) {
+			return;
+		}
+		
+		if (!element.disabled) {
+			element.title = toolTip;
+		}
+		else {
+			element.title = "";
+		}
+	}
+	
+	/**
+	 * function to check if required input fileds filled or not, 
+	 * and enabale or disable commandButton while typing
+	 * see userRegistration.xhtml for example usage
+	*/
+	function checkRequiredFieldsForCommandButton(inputSelector, buttonId) {
+
+		var $requiredInputForContinueButton = $(inputSelector);
+		
+		if ($requiredInputForContinueButton.length > 0) {
+			// enable or disable commandButton while typing
+			disableCommandButton(buttonId);
+			disableEnterKey(inputSelector);			
+		}
+		
+		$requiredInputForContinueButton.on('input focus', function() {
+			var disableButton = false;
+			$requiredInputForContinueButton.each(function() {
+				if ($(this).val().trim() == '') {
+					disableButton = true;
+					return false;
+				}
+			});
+
+			if (disableButton) {
+				disableCommandButton(buttonId);
+				disableEnterKey(inputSelector);
+				
+			} else { 
+				enableCommandButton(buttonId);
+				enableEnterKey(inputSelector)
+			}
+		});
+	}
+
+	function enableCommandButton(buttonId) {
+		$(buttonId).prop('disabled', false);
+		$(buttonId).removeClass('ui-state-disabled');
+	}
+	
+	function disableCommandButton(buttonId) {
+		$(buttonId).prop('disabled', true);
+		$(buttonId).addClass('ui-state-disabled');
+	}
+	
+	function disableEnterKey(inputSelector) {
+		$(inputSelector).keydown(function(event) {
+			if (event.keyCode == 13) {
+				event.preventDefault();
+				return false;
+		    }
+		});
+	}
+	
+	function enableEnterKey(inputSelector) {
+		$(inputSelector).off('keydown');
+	}
+	

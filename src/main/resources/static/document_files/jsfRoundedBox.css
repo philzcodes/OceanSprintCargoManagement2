@@ -1,0 +1,104 @@
+
+	body {
+		background-color: #FFFFFF;
+		margin: 0px;
+		padding: 0px;
+		font-size: 12px;
+		font-family: Verdana;
+	}
+
+	div.rounded-box {
+	    position:relative;
+	    width: 420px;
+	    background-color: #cccccc;
+	    margin: 3px;
+	}
+	 
+	/*********************
+	GLOBAL ATTRIBUTES
+	*********************/
+	div.top-left-corner, div.bottom-left-corner, div.top-right-corner, div.bottom-right-corner {
+		position:absolute; 
+		width:20px; 
+		height:20px; 
+		background-color:#FFFFFF; 
+		overflow:hidden;
+	}
+	
+	/* MUST be ARIAL font to display properly */
+	div.top-left-inside, div.bottom-left-inside, div.top-right-inside, div.bottom-right-inside {
+		position:relative; 
+		font-size:150px; 
+		font-family: Arial; 
+		color:#cccccc; 
+		line-height: 40px;
+	}
+	 
+	/*********************
+	SPECIFIC ATTRIBUTES
+	*********************/
+	 
+	div.top-left-corner { top:0px; left:0px; }
+	div.bottom-left-corner {bottom:0px; left:0px;}
+	div.top-right-corner {top:0px; right:0px;}
+	div.bottom-right-corner {bottom: 0px; right:0px;}
+	 
+	div.top-left-inside {left:-8px;}
+	div.bottom-left-inside {left:-8px; top:-17px;}
+	div.top-right-inside {left:-25px;}
+	div.bottom-right-inside {left:-25px; top:-17px;}
+	 
+	div.box-contents {
+		position: relative; 
+		padding: 20px; 
+		color:#000000;
+	}
+	
+	.box-title {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 20px;
+		font-weight: bold;
+	}
+	
+	.box-label {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	.box-comment {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 12px;
+	}
+	.box-labelUpper {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 12px;
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+	
+	.box-value {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 12px;
+		font-weight: bold;
+		color:#FFFFFF;
+	}
+	
+	.box-link {
+		font-family: Verdana, Arial, Helvetica;
+		font-size: 12px;
+	}
+	
+	.box-error {
+		font-family: Verdana, Arial, Helvetica;
+		color: Red;
+		font-size: 12px;
+		font-weight: bold;
+	}
+	
+	.box-alignBottom {
+		vertical-align: bottom;
+	}
+	
+	.box-alignTop {
+		vertical-align: top;
+	}

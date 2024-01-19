@@ -1,0 +1,117 @@
+/* DEFAULT LINKS */
+A:LINK		{color : BLACK;}
+A:VISITED	{color : BLACK;}
+A:HOVER		{color : LIMEGREEN;}
+
+/* Left Nav Menus*/
+.leftnav-level1 {font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; color: White; background-color: #142B4B;}
+.leftnav-level2 {font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; color: White; background-color: #142B4B;}
+.leftnav-level2  a {
+	color: White;
+	text-decoration: none;
+}
+.leftnav-level2  a:link {
+	color: White;
+	text-decoration: none;
+}
+.leftnav-level2  a:visited {
+	color: White;
+	text-decoration: none;
+}
+.leftnav-level2  a:active {
+	color: White;
+	text-decoration: none;
+}
+.leftnav-level2  a:hover {
+	color: Silver;
+	text-decoration: blink;
+}	
+
+/* HEADERS */
+.hdTITLE	{font-family: Arial,Helvetica;font-size: 24pt;color: BLACK;}
+.header		{font-family: Arial, sans-serif; font-size: 1.5em; color: #363668;}
+.header-w	{font-family: Arial, sans-serif; font-size: 1.5em; color: WHITE;}
+.header-n	{font-family: Arial, sans-serif; font-size: 1.5em; color: BLACK;}
+.header-s	{font-family: Arial, Helvetica, sans-serif; font-size: 1.1em; color: #363668;}
+.header-sw	{font-family: Arial, sans-serif; font-size: 1.2em; color: WHITE;}
+.header-ss	{font-family: Arial, sans-serif; font-size: 1em; color: #363668;}
+.header-ssw	{font-family: Arial, sans-serif; font-size: 1em; color: WHITE;}
+.header-ssn	{font-family: Arial, sans-serif; font-size: 1em; color: BLACK;}
+.header-sss	{font-family: Arial, sans-serif; font-size: 0.8em; color: #363668;}
+.header-ssl	{font-family: Arial, sans-serif; font-size: 1em; color: LimeGreen;}
+.header-ssb	{font-family: Helvetica,sans-serif; font-size: 1.5em; color: #336699;font-weight : bold;}
+
+/* BODY */
+.body		{font-family: Arial, Helvetica, sans-serif; font-size: 1em; color: Black;}
+.body-w		{font-family: Arial, Helvetica, sans-serif; font-size: 1em; color: WHITE;}
+.body-a		{font-family: Arial, Helvetica, sans-serif; font-size: 1em; color: SILVER;}
+.body-g		{font-family: Arial, Helvetica, sans-serif; font-size: 1em; color: Gray;}
+.body-l		{font-family: Arial, Helvetica, sans-serif; font-size: 1em; color: LimeGreen;}
+.body-s		{font-family: Arial, Helvetica, sans-serif; font-size: 0.75em; color: Black;}
+.body-sa	{font-family: Arial, Helvetica, sans-serif; font-size: 0.75em; color: SILVER;}
+.body-sr	{font-family: Arial, Helvetica, sans-serif; font-size: 0.75m; color: #CC3333;}
+.body-sb	{font-family: Arial, Helvetica, sans-serif; font-size: 0.75em; color: MIDNIGHTBLUE;}
+.body-sw	{font-family: Arial, Helvetica, sans-serif; font-size: 0.75em; color: WHITE;}
+.body-sl	{font-family: Arial, sans-serif; font-size: 0.75em; color: LimeGreen;}
+.body-so	{font-family: Arial, sans-serif; font-size: 0.75em; color: #FD9D08;}
+.body-ss	{font-family: Arial, sans-serif; font-size: 0.7em; color: Black;}
+.body-ssw	{font-family: Arial, sans-serif; font-size: 0.7em; color: WHITE;}
+.body-ssa	{font-family: Arial, sans-serif; font-size: 0.7em; color: SILVER;}
+.body-sss	{font-family: Arial, sans-serif; font-size: 7.5pt; color: Black;}
+.image	{font-family: small fonts, arial; font-size: 7pt; color: Black; align: Center;}
+/* BODY Spaced out */
+.body-s-e	{font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: Black; letter-spacing : 10px;}
+.body-sy-e	{font-family: Arial, Helvetica, sans-serif; font-size: 8pt; color: Yellow; letter-spacing : 10px;}
+
+
+
+
+
+
+/* SPECIAL */
+.TH			{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: White;
+	background-color: #142B4B;
+}
+
+.TH  a:link {
+	color: White;
+	text-decoration: none;
+}
+.TH  a:visited {
+	color: White;
+	text-decoration: none;
+}
+.TH  a:active {
+	color: White;
+	text-decoration: none;
+}
+.TH  a:hover {
+	color: Silver;
+	text-decoration: blink;
+}
+
+.height		{
+	height:18.75pt
+}
+
+/* DATA */
+.row		{background-color: #CCCCCC;}
+
+/* ERROR MESSAGE STYLES */
+.ErrHead	{font-family: arial,Helvetica; font-size: 16pt; color: #CC3333;}
+.error		{font-family: arial,Helvetica; font-size: 10pt; color: #CC3333;}
+.error-s	{font-family: arial,Helvetica; font-size: 8pt; color: #CC3333;}
+
+/* BUTTONS */
+A.btn-lg:LINK		{color: BLACK;}
+A.btn-lg:VISITED	{color: BLACK;}
+.btn-lg				{font-family: small fonts, arial; font-size: 7pt; background: DARKGRAY;
+						border-top:		1px solid Gainsboro;	border-left:	1px solid Gainsboro;
+						border-bottom:	1px solid DIMGRAY;		border-right:	1px solid DIMGRAY;}
+/*LISTS*/
+UL	{margin-top: 0em;}
+UL UL	{margin-top: 0em;}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleafe.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Users Data</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body
+    style="
+      background-image: url(https://th.bing.com/th/id/OIP.PNDFPBXSfJ9LttZQalbzTgHaEK?pid=ImgDet&rs=1);
+    "
+  >
+    
+
+    <section style="background-color: white" class="container">
+      <center>
+        <h1>All Tracking Details</h1>
+      </center>
+
+        <div class="row">
+        <div class="col-sm-9 col-md-6 col-lg-8">
+          <a th:href="@{/admin/add}" class="btn btn-primary btn-sm mb-3">
+            Add Consignment</a
+          >
+        </div>
+
+      </div>
+
+
+      <table class="table table-striped tabled-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>SenderName</th>
+            <th>TotalFreight</th>
+            <th>DepartedTime</th>
+             <th>Destination</th>
+             <th>Status</th>
+             <th>trackingId</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="item : ${listItems}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.senderName}"></td>
+            <td th:text="${item.totalFreight}"></td>
+            <td th:text="${item.departedTime}"></td>
+             <td th:text="${item.destination}"></td>
+             <td th:text="${item.status}"></td> 
+              <td th:text="${item.trackingId}"></td> 
+  
+            <td>
+             <a
+                th:href="@{/admin/edit/{id}(id=${item.id})}"
+                class="btn btn-primary"
+                >Update</a
+              >
+              <a  th:href="@{/admin/{id}(id=${item.id})}" class="btn btn-danger"
+                >Delete</a
+              >
+              <!-- onClick="deletes('${item.id}')" -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <script>
+      function search() {
+        var searchValue = document.getElementById("search").value;
+        alert("set " + searchValue);
+        //	var form = document.createElement("form");
+        //		form.method = "GET";
+        //		form.action = "/users/search/"+id;
+        //		form.submit();
+        location.href = "/admin/users/search/" + searchValue;
+      }
+
+      function deletes(id) {
+        alert(" are you sure you want to delete user" + id);
+        //	var form = document.createElement("form");
+        //		form.method = "GET";
+        //		form.action = "/users/search/"+id;
+        //		form.submit();
+        location.href = "admin/" + id;
+      }
+    </script>
+  </body>
+</html>
